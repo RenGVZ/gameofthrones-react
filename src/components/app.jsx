@@ -1,33 +1,41 @@
 import React, { useState } from 'react';
-// import ReactDOM from 'react';
+// import ReactDOM from 'react-dom';
 // import { render } from 'node-sass';
 
 function App() {
+  const [chars, setChars] = useState(null);
+  const apiURL = 'https://www.anapioficeandfire.com/api/characters?page=3';
+  function getChar() {
+    fetch(apiURL)
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data);
+        setChars(data);
+      });
+  }
   return (
     <div>
       <div className="landing">
-        <button className="fetch-btn">Get Books</button>
+        <button onClick={getChar} className="fetch-btn">Fetch Data</button>
       </div>
-
-
       <div className="container">
-        <div className="book-box">
-          <h2 className="name">
-            <span role="img" aria-label="book">📖</span>
-            Book name
-          </h2>
-          <p className="pages">
-            <span role="img" aria-label="pages">🔖</span>
-            Pages
-          </p>
-          <p className="released">
-            <span role="img" aria-label="released">📅</span>
-            Released
-          </p>
-        </div>
+        {chars && chars.map((char, index) => {
+          const titles = (char.titles).join(', ');
+          return (
+          <div className="book-box" key={index}>
+            <h2>
+              📖{char.name}
+            </h2>
+            <p>
+              🔖{char.gender}
+            </p>
+            <p>
+              📅{titles}
+            </p>
+          </div>
+          );
+        })}
       </div>
-
-
     </div>
   );
 }
